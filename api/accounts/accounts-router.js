@@ -16,7 +16,7 @@ router.get('/',async (req, res, next) => {
   }
 })
 
-router.get('/:id', async (req, res, next) => {
+router.get('/:id', checkAccountId, async (req, res, next) => {
   try {
     const data = await Account.getById(req.params.id)
     res.json(data)
@@ -25,7 +25,7 @@ router.get('/:id', async (req, res, next) => {
   }
 })
 
-router.post('/', async (req, res, next) => {
+router.post('/',checkAccountNameUnique,checkAccountPayload, async (req, res, next) => {
   try {
     const data = await Account.create(req.body)
     res.status(201).json(data)
@@ -34,7 +34,7 @@ router.post('/', async (req, res, next) => {
   }
 })
 
-router.put('/:id', async (req, res, next) => {
+router.put('/:id',checkAccountNameUnique, checkAccountPayload, async (req, res, next) => {
   try {
     const data = await Account.updateById(req.params.id, req.body)
     res.json(data)
@@ -43,7 +43,7 @@ router.put('/:id', async (req, res, next) => {
   }
 });
 
-router.delete('/:id', (req, res, next) => {
+router.delete('/:id', checkAccountId, (req, res, next) => {
   Account.deleteById(req.params.id)
   .then( rows => {
     if (rows) {
@@ -55,11 +55,5 @@ router.delete('/:id', (req, res, next) => {
   .catch(next)
 })
 
-router.use((err, req, res, next) => { // eslint-disable-line
-  res.status(err.status || 500). json({
-    message: err.message,
-    stack: err.stack
-  })
-})
 
 module.exports = router;
