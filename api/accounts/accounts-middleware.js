@@ -3,7 +3,7 @@ const db = require('../../data/db-config')
 
 
 exports.checkAccountPayload = (req, res, next) => {
-  if (!req.body.name || (!req.body.buget && isNaN(req.body.budget))){
+  if (req.body.name === undefined || req.body.budget === undefined ){
     res.status(400).json({ message: "name and budget are required" })
   } else if (req.body.name.trim().length < 3 || req.body.name.trim().length > 100) {
    res.status(400).json({ message: "name of account must be between 3 and 100" })
